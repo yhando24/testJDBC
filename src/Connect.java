@@ -30,7 +30,6 @@ public class Connect
 			catch (SQLException e)
 			{
 				// do nothing
-				
 			}
 		}
 	}
