@@ -13,6 +13,7 @@ public class Connect
 		try
 		{
 			conn = Connect.getConnection();
+			
 
 			System.out.println("Connexion effective !");
 		}
