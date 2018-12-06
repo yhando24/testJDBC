@@ -8,12 +8,18 @@ public class Transact
 {
 	public static void main(String[] args)
 	{
-		updateData();
+		try {
+			updateData();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public static void updateData()
+	public static void updateData() throws SQLException
 	{
 		Connection conn = null;
+		Statement statement = null;
 		
 		try
 		{
@@ -22,7 +28,7 @@ public class Transact
 			
 			// Création d'un objet Statement permettant de réaliser des requêtes
 			// sur la base de données
-			Statement statement = conn.createStatement();
+			statement = conn.createStatement();
 
 			// On crée la requête
 			String query = "UPDATE matiere set mat_nom = 'ALLEMAND' WHERE mat_id = 1";
@@ -39,20 +45,17 @@ public class Transact
 			// les requêtes qui n'ont pas été annulées sont validées
 			conn.commit();
 			
-			statement.close();
-			conn.close();
+			
 		}
 		catch (Exception e)
 		{
-			// les requêtes précédentes sont annulées
-			try {
-				conn.rollback();
-				e.printStackTrace();
-				
-			} catch (SQLException e1) {
-				// DO NOTHING
-				e1.printStackTrace();
-			}
+			conn.rollback();
+			e.printStackTrace();
+		}
+		finally
+		{
+			statement.close();
+			conn.close();
 			
 		}
 	}

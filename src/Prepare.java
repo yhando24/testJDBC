@@ -2,31 +2,34 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Prepare
 {
 	public static void main(String[] args)
 	{
-		readData(1, 6);
+		readData(1);
 	}
 	
-	public static void readData(Integer id1, Integer id2)
+	public static void readData(Integer id1)
 	{
+		Connection conn = null;
+		PreparedStatement preparedStatement = null;
+		
 		try
 		{
-			Connection conn = Connect.getConnection();
+			conn = Connect.getConnection();
 			
 			// On crée la requête
-			String query = "SELECT * FROM matiere WHERE mat_id = ? OR mat_id = ?";
+			String query = "SELECT * FROM livre WHERE id = ?";
 			
 			
 			// On crée l'objet avec la requête en paramètre
-			PreparedStatement preparedStatement = conn.prepareStatement(query);
+			preparedStatement = conn.prepareStatement(query);
 			
 			// On remplace le premier paramètre (dans cette requête il n'y a qu'un seul praramètre) par le nom de la classe
 			preparedStatement.setInt(1, id1);
-			preparedStatement.setInt(2, id2);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
 			
@@ -36,15 +39,26 @@ public class Prepare
 			
 			while (resultSet.next())
 			{
-				System.out.print("\t" + resultSet.getInt("mat_id") + "\t\t" + resultSet.getString("mat_nom") + "\r\n");
+				
+				System.out.print("\t" + resultSet.getInt("id") + "\t\t" + resultSet.getString("mat_nom") + "\r\n");
 			}
 			
-			preparedStatement.close();
+			
 			
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				preparedStatement.close();
+				conn.close();
+			} catch (SQLException e) {
+				// ne rien faire
+				e.printStackTrace();
+			}
 		}
 	}
 }
